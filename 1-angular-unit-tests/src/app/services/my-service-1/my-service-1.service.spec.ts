@@ -5,6 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { POSTS_LIST } from './PostsListData';
 import { Post } from './Post';
 
+
 describe('MyService1Service', () => {
   let myService1: MyService1Service,
     myFakeLogger: any, httpTestingController: HttpTestingController;
@@ -28,19 +29,40 @@ describe('MyService1Service', () => {
     expect(myService1).toBeTruthy();
   });
 
-  it('Testing HTTP PUT mock call', () => {
+  it('Testing HTTP Errors', () => {
     const myChanges: Partial<Post> = { "title": "my changed title 1" };
     myService1.updatePost(2, myChanges)
-      .subscribe(post => {
-        expect(post).toBeTruthy();
-        expect(post.id).toBe(2);
-        expect(post.title).toBe('my changed title 1');
-      });
+      .subscribe(
+        {
+          next: (post) => {
+            expect(post).toBeTruthy();
+            expect(post.id).toBe(2);
+            expect(post.title).toBe('my changed title 1');
+          },
+          error: (error) => {
+            expect(error.status).toBe(500);
+          }
+        }
+      );
 
     const req = httpTestingController.expectOne('https://jsonplaceholder.typicode.com/posts/2');
     expect(req.request.method).toEqual('PUT');
-    req.flush({ ...POSTS_LIST[1], ...myChanges });
+    req.flush('Update post failed intentionally!', { status: 500, statusText: 'Internal Server Error' });
   });
+
+  // it('Testing HTTP PUT mock call', () => {
+  //   const myChanges: Partial<Post> = { "title": "my changed title 1" };
+  //   myService1.updatePost(2, myChanges)
+  //     .subscribe(post => {
+  //       expect(post).toBeTruthy();
+  //       expect(post.id).toBe(2);
+  //       expect(post.title).toBe('my changed title 1');
+  //     });
+
+  //   const req = httpTestingController.expectOne('https://jsonplaceholder.typicode.com/posts/2');
+  //   expect(req.request.method).toEqual('PUT');
+  //   req.flush({ ...POSTS_LIST[1], ...myChanges });
+  // });
 
   // it('Testing HTTP GET mock call', () => {
   //   myService1.getAllPosts()
