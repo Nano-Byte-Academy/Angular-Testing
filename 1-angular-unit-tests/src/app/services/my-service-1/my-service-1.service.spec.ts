@@ -47,6 +47,10 @@ describe('MyService1Service', () => {
 
     const req = httpTestingController.expectOne('https://jsonplaceholder.typicode.com/posts/2');
     expect(req.request.method).toEqual('PUT');
+
+    expect(req.request.params.get("sortOrder")).toEqual('asc');
+    expect(req.request.params.get("pageSize")).toEqual('5');
+
     req.flush('Update post failed intentionally!', { status: 500, statusText: 'Internal Server Error' });
   });
 
