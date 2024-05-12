@@ -3,15 +3,22 @@ import { MyService1Service } from './my-service-1.service';
 import { MyLoggerServiceService } from './my-logger-service/my-logger-service.service';
 
 describe('MyService1Service', () => {
-  let service: MyService1Service;
+  let myService1: MyService1Service,
+    myFakeLogger: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(MyService1Service);
+    myFakeLogger = jasmine.createSpyObj('MyLoggerServiceService', ['log']);
+    TestBed.configureTestingModule({
+      providers: [
+        MyService1Service,
+        { provide: MyLoggerServiceService, useValue: myFakeLogger }
+      ]
+    });
+    myService1 = TestBed.inject(MyService1Service);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(myService1).toBeTruthy();
   });
 
   // Testing spyOn
@@ -38,7 +45,7 @@ describe('MyService1Service', () => {
   });
 
   it('#getStringValue should return a string value', () => {
-    expect(service.getStringValue())
+    expect(myService1.getStringValue())
       .withContext('Inside getStringValue() my test')
       .toBe('my string return value');
   });
