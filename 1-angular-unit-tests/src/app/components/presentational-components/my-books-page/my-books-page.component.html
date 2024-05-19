@@ -1,0 +1,7 @@
+<p>My Books List Page!</p>
+
+<div>
+    <div *ngFor="let book of myBooksList">
+        <app-book [bookTitle]="book.title" [bookAuthor]="book.author"></app-book>
+    </div>
+</div>
