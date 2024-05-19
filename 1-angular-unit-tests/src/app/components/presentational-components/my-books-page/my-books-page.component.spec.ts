@@ -34,6 +34,9 @@ describe('MyBooksPageComponent', () => {
     expect(myBooksList.length).toBe(3);
     expect(myFirstBookTitle.nativeElement.textContent).toBe("My Title 1");
 
+    // elem.nativeElement.click();
+    // fixture.detectChanges();
+
     let h2: HTMLElement;
     h2 = fixture.nativeElement.querySelector('.myBookStyle h2');
     expect(h2.textContent).toBe("My Title 1");
